@@ -1,0 +1,31 @@
+简单了解什么是RSA非对称加密技术：
+https://www.cnblogs.com/jiftle/p/7903762.html
+
+
+ipfs中的peer id是先应用RSA技术生成一对公钥和私钥，接着用SHA2_256加密技术通过公钥产生一个256bit（即32byte）长的哈希值，再转换成ID格式。
+
+经过Base58编码后的长度计算：byte_length * 1.38 + 1，其中byte_length * 1.38需要去掉小数部分。也就是byte_length * 1.38向上取整。
+
+以太坊的PrivateKey是先通过基于secp256k1加密算法的ecdsa算法生成一个PrivateKey结构体；再将私钥转换成二进制字节，最后再转换成带0x前缀的十六进制字符串。公钥的产生方式一样。地址，也就是以太坊的普通账户产生方式是：根据公钥PublicKey，先生成byte格式，再去掉第一个字节，对剩下的字节进行keccak256哈希编码得到32B，最后去掉前12B，对剩下的20B进行16进制编码得到40B字符串，再加上0x前缀，最终构成地址。
+
+
+
+在产生公私钥的时候，GenerateKey()会携带一个typ的参数，这个参数指定生成公私钥的加密算法，代码中提供了RSA、Ed25519、Secp256k1、ECDSA这些算法可供选择。
+
+了解secp256k1算法：
+https://www.cnblogs.com/wanghui-garcia/p/9646508.html
+https://blog.csdn.net/AndyTsui/article/details/81637731
+
+以太坊的普通账户也是以太坊的个人地址，以太坊地址以0x开头，0x后面跟着40个字符，如：
+0xbcf5b841303bc08026ce2d3b8f83498ffe42c12f 、
+0x692a70d2e424a56d2c6c27aa97d1a86395877b3a
+以太坊的第二类账户，即智能合约账户。智能合约地址的格式是和普通账户的地址格式是一样的，也是0x开头后面跟着40个字符。
+
+ECDSA：
+比特币中使用的数字签名算法是椭圆曲线数字签名算法（Elliptic Curve Digital Signature Algorithm）或ECDSA。 ECDSA是用于基于椭圆曲线私钥/公钥对的数字签名的算法。
+
+以太坊的crypto模块：
+https://www.cnblogs.com/baizx/p/6936258.html
+
+
+以太坊中的keystore里面，先用secp256k1加密算法生成ECDSA的私钥结构体，包含私钥、公钥。
