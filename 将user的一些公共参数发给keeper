@@ -1,0 +1,7 @@
+暂时的想法是将这些公共参数（包括公钥、pairing中的Params）定义为一个结构体，然后将这些参数构成的结构体经过potobuf的序列化（也就是Marshal函数）后转为byte切片，然后定义一个kv对经过dht层发送给keeper。
+
+pairing中的cptr目前来看传不过去，但是在keeper这边可以用NewPairing(params *Params)函数来生成。
+
+
+publickey中的4个参数的格式转化：可以用Bytes()函数将*Element格式的字段转为[]byte型的，然后可以用SetBytes()函数将[]byte转换回*Element。其中SetBytes()函数前的调用者el需要用MakeCheckedElement()函数来生成，其中传入的field参数需要根据publickey中的4个参数的相应生成方式来确定。比如：BlsPK就需要用G2参数。之所以用MakeCheckedElement()而不用MakeUncheckedElement()是因为PublicKey产生的时候调用的NewG2等函数里面就是用的MakeCheckedElement()函数。
+	写这篇笔记的时候才发现，其实我们可以直接调用NewG2()函数来产生对应域(field)的*Element.
