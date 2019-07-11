@@ -1,0 +1,25 @@
+1. 当前数据存放在~/.ipfs/blocks, 换为~/.ipfs/data
+（1）go-ipfs-config/init.go中 --"mountpoint": "/blocks",   ++ "mountpoint": "/data",
+                                                       --"path": "blocks",  ++  "path": "data",
+          执行ipfs init之后没有变为data
+（2） go-ipfs/docs/config.md以及datastores.md中 --"mountpoint": "/blocks",   ++ "mountpoint": "/data",
+                                                       --"path": "blocks",  ++  "path": "data",
+   repo/fsrepo/config_test.go中
+ --"mountpoint": "/blocks",   ++ "mountpoint": "/data",
+                                                       --"path": "blocks",  ++  "path": "data",
+
+ 2. 存放⽅式xx/xxxx.data, 换为xxxx.data
+	(1) go-ipfs-flatfs/flatfs.go中 
+	//dir = filepath.Join(fs.path, fs.getDir(noslash))
+	    dir = fs.path
+	执行ipfs init之后没有变成一级目录
+  
+  3、multibase
+  multibase 代表的是一种编码格式，方便把CID编码成不同的格式，比如这里定义了2进制、8进制、10进制、16进制，也有我们熟悉的base58和base64编码。
+  
+  4、golang的sort包
+golang中也实现了排序算法的包sort包．
+sort包中实现了３种基本的排序算法：插入排序、快排和堆排序．和其他语言中一样，这三种方式都是不公开的，他们只在sort包内部使用。
+所以用户在使用sort包进行排序时无需考虑使用那种排序方式，
+sort.Interface定义的三个方法：获取数据集合长度的Len()方法、比较两个元素大小的Less()方法和交换两个元素位置的Swap()方法，
+就可以顺利对数据集合进行排序。sort包会根据实际数据自动选择高效的排序算法。
