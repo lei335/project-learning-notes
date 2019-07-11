@@ -1,0 +1,2 @@
+两个ipfs结点建立一个共享的私有网络，需要创建一个共享密钥。
+datastore要求一个Datastore接口，从而被FSRepo接受。
