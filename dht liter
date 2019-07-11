@@ -1,0 +1,41 @@
+1.目前dht liter存在有的前缀匹配不到的问题，比如：
+Ipfs dht put 123456 456789
+Ipfs dht liter 1(匹配的到）
+Ipfs dht liter 12(匹配不到）
+Ipfs dht liter 123(匹配的到）
+Ipfs dht liter 1234(匹配不到）
+Ipfs dht liter 12345(匹配的到）
+Ipfs dht liter 123456(匹配的到）
+
+
+2.出现问题的原因是：
+string	Byte(AscII码）	Base32编码后byte	Base32编码后string
+123456	49 50 51 52 53 54	47 71 69 90 68 71 78 66 86 71 89	
+1	49	47 71 69	/G
+12	49 50	47 71 69 90 65(跟完整数据不匹配了)	/GEZA
+123	49 50 51	47 71 69 90 68 71	/GEZDG
+
+
+
+literLocal() -> *measure) Query() -> mount.go(Query()) -> measure) Query() -> accessor.Query() -> db.DB.NewIterator() -> reader.NewIterator() -> memdb.db.NewIterator() -> 
+
+
+Base32编码：
+https://blog.csdn.net/instruder/article/details/5963344
+
+
+
+Dht.go中的literLocal()函数中，
+key := ds.NewKey(base32.RawStdEncoding.EncodeToString([]byte(prefix))).String() 
+这里导致liter错误，因为base32编码导致prefix的byte字节与key的字节不符
+
+
+Go-ds-leveldb/datastore.go中的queryNew()函数里面产生前缀匹配的字节范围rnge{start []byte, limit []byte}，以及用NewIterator()函数进行匹配。
+
+在reader.go中的newBlockIter()中进行查找匹配的。返回在查找范围内的一个*block，这里面包含了key、value
+
+
+Ipfs dht put:
+Commands/dht.go/putValueDhtCmd -> routing.go/PutValue() -> putLocal() -> measure/(*measure) Put() -> mount.go/Put() -> measure/(*measure) Put() -> go-ds-leveldb/datastore.go/(*accessor) Put() -> db_write.go/(*DB) Put() -> batch.go/Put() -> memdb.go/(*DB) Put()
+
+最终解决dht前缀匹配问题的解决方法是：将前缀匹配、dht put、dht get、dht delete中的将key转换为base32编码的部分去掉。
