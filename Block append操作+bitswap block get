@@ -1,0 +1,18 @@
+目前block操作有put、get、has等，我们需要加入一个append操作，这样就可以在一个文件里面append存入数据。
+Idstore.Put()→blockstore.Put()→keytransform.Put()→retrystore.Put()→measure.Put()→mount.Put()→measure.Put()→flatfs.Put()→idstore.Put()→blockstore.Put()→autobatch.Put()
+
+在keytransform.Put()中将key(/xxxx)转换为：/data/xxxx
+在mount.Put()中根据前缀找到挂载的datastore(flatfs或leveldb)，将kv往那里put，并且key值去掉前缀。
+在basic_ds中需要实现Append()函数
+
+1.目前bitswap中的sessID表示每次集体操作的ID，是依次累加的。比如完成bitswap完成一次getblcoks后，sessID就会加一。
+
+2.bitswap需要维护一个wantlist和一个havelist
+
+3.bitswap block get在Bitswap层先生成一个wantlist包裹在message中，接着bitswap.wantmanager的WantBlocks()函数被触发，将message发送出去。我们将transaction包裹在wantlist的Entry结构体中一齐发送出去。
+对方节点接收到这个message with wantlist之后，decision engine来进行处理，按照请求的优先级进行发送。
+总体大致流程可以参考：
+https://github.com/ipfs/go-bitswap
+
+现在的rawdata格式为：prefix+(segment+tag1+tag2)+(segment+tag1+tag2)+…
+一个segment+tag1+tag2称为一个field。
