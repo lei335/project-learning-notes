@@ -1,0 +1,46 @@
+1.熟悉以太坊
+可以在以太坊上加脚本文件进行模拟、测试。
+geth help  可以查看以太坊客户端的命令
+
+
+2.go调用shell脚本怎么操作？原来不是go调用shell脚本，而是go发送http请求。
+
+3.postman
+（1）是一款google浏览器插件，提供功能强大的 Web API 和 HTTP 请求的调试，它能够发送任何类型的HTTP 请求 (GET, POST, PUT, DELETE...)，并且能附带任何数量的参数和 Headers。不仅如此，它还提供测试数据和环境配置数据的导入导出。
+（2）使用postman发送rpc请求时，选用POST，ip地址应该填虚拟机的ip地址，而不是windows系统的localhost(127.0.0.1)，在jaysonserver脚本文件中，server.http().listen(3000)中的3000就是脚本服务器的端口。
+
+4.rpc请求是什么？有哪些rpc请求？
+rpc就是Remote Produce Call Protocal，服务消费方可以通过rpc在本地调用服务提供方的函数。
+
+5.智能合约是什么？
+         智能合约我们从一个简单的合约的例子来看。例如A公司与B公司签订的买卖合同，如果A公司到账后,那么B公司则在一定的时间内应当赋予A公司一定的物资。如果A公司在付款之后，B公司拒不履行合同。或者其他的理由延迟发货期限。那么可能给A公司造成巨大的损失。在现实情况下，可能A公司只能去法院起诉B公司。而这个周期又包含了起诉,立案,宣判,执行阶段。而这个延迟的周期又是被拉长了。A公司甚至可能因此而破产，也就是说传统的合约，合同可能执行起来会遇到很多的问题。执行失效问题、第三方参与问题。甚至在合约执行的过程中可能遇到更多的其他问题。
+         智能合约是一套以数字形式定义的承诺，包括合约参与方可以在上面执行这些承诺的协议’也就是说智能合约是一套能够自动执行某些手动才能完成任务的协议。其实智能合约相当于在计算机系统中构建一份参与方均可读的合同。
+         
+        Solidity 语法类似 JavaScript，它的编译器 solc 可以把智能合约源码编译成以太坊虚拟机 EVM 可以执行的二进制码。
+https://www.jianshu.com/p/9fa31e4cdf4d 智能合约操作
+
+6.Web3模块
+         web3.js是以太坊提供的一个Javascript库，它封装了以太坊的RPC通信API，提供了一系列与区块链交互方法，使js与以太坊交互变得简单。
+
+7.使用jsonrpc将参数转化成jsonrpc格式发送出去。
+https://github.com/ybbus/jsonrpc?tdsourcetag=s_pctim_aiomsg
+
+8.首先开启geth控制台，然后运行jaysonserver，注意需要先解锁一个账户，然后发起交易，然后开始挖矿。
+
+9.使用一个变量的时候，需要先定义，只有声明还没定义的，是不能拿来直接用的，会报index out of range的错误。比如下面：如果缺少
+res := make([]string, j)
+
+10.jaysonserver.js部署了pay、getuser、isUpKeeping、getKeepers、getProviders、providers_这些智能合约，创建的服务器提供了deployUK()、getIDs()、getContracts()这些函数。
+
+11.nodejs和javascript
+https://blog.csdn.net/w2ndong/article/details/80243652
+
+12.以太坊
+账户：用椭圆曲线加密算法ECC产生一个私钥，参数用的是secp256k1；然后再生成公钥，再生成地址。最后是十六进制的带"0x"前缀的42字节字符串。
+交易：交易是一个签名数据包，交易使用椭圆曲线数字签名算法（ECDSA)进行签名，ECDSA是一种基于ECC的数字签名算法。
+
+13.secp256k1 [27 20] 8M
+设置取私钥的文件密码可以在core/core.go的loadPrivateKey里面设置。
+存储公私钥：在core.go里面的LoadPrivateKey()里面往*IpfsNode里面存储。
+
+14.geth控制台：https://www.jianshu.com/p/9fa31e4cdf4d
